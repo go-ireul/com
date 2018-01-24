@@ -97,3 +97,17 @@ func BenchmarkCompareSliceStrU(b *testing.B) {
 		CompareSliceStrU(s1, s2)
 	}
 }
+
+func TestCompactSliceStr(t *testing.T) {
+	Convey("compact slice string", t, func() {
+		Convey("should work", func() {
+			str := []string{"a", "   \t\nb", "", "c", "c ", "", "d "}
+			So(CompareSliceStr(CompactSliceStr(str), []string{"a", "b", "c", "d"}), ShouldBeTrue)
+		})
+		Convey("should work with empty", func() {
+			str := []string{"", "", "", "", "", ""}
+			So(CompareSliceStr(CompactSliceStr(str), []string{}), ShouldBeTrue)
+		})
+
+	})
+}

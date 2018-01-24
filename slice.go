@@ -44,7 +44,7 @@ func CompareSliceStr(s1, s2 []string) bool {
 	return true
 }
 
-// CompareSliceStr compares two 'string' type slices.
+// CompareSliceStrU compares two 'string' type slices.
 // It returns true if elements are the same, and ignores the order.
 func CompareSliceStrU(s1, s2 []string) bool {
 	if len(s1) != len(s2) {
@@ -84,4 +84,16 @@ func IsSliceContainsInt64(sl []int64, i int64) bool {
 		}
 	}
 	return false
+}
+
+// CompactSliceStr filters out empty string, duplicated string ignore case and leading / trailing whitespace from a slice of string
+func CompactSliceStr(sl []string) []string {
+	ret := make([]string, 0, len(sl))
+	for _, v := range sl {
+		val := strings.ToLower(strings.TrimSpace(v))
+		if len(v) != 0 && !IsSliceContainsStr(ret, val) {
+			ret = append(ret, val)
+		}
+	}
+	return ret
 }

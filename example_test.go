@@ -19,7 +19,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/Unknwon/com"
+	"ireul.com/com"
 )
 
 // ------------------------------
@@ -71,7 +71,7 @@ func ExampleGetGOPATHs() {
 }
 
 func ExampleGetSrcPath() {
-	srcPath, err := com.GetSrcPath("github.com/Unknwon/com")
+	srcPath, err := com.GetSrcPath("ireul.com/com")
 	if err != nil {
 		fmt.Println(err)
 		return

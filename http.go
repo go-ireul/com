@@ -140,9 +140,11 @@ func HttpPostJSON(client *http.Client, url string, body, v interface{}) error {
 		return err
 	}
 	defer rc.Close()
-	err = json.NewDecoder(rc).Decode(v)
-	if _, ok := err.(*json.SyntaxError); ok {
-		return fmt.Errorf("JSON syntax error at %s", url)
+	if v != nil {
+		err = json.NewDecoder(rc).Decode(v)
+		if _, ok := err.(*json.SyntaxError); ok {
+			return fmt.Errorf("JSON syntax error at %s", url)
+		}
 	}
 	return nil
 }
@@ -169,7 +171,7 @@ func FetchFiles(client *http.Client, files []RawFile, header http.Header) error 
 			ch <- nil
 		}(i)
 	}
-	for _ = range files {
+	for range files {
 		if err := <-ch; err != nil {
 			return err
 		}
@@ -192,10 +194,21 @@ func FetchFilesCurl(files []RawFile, curlOptions ...string) error {
 			ch <- nil
 		}(i)
 	}
-	for _ = range files {
+	for range files {
 		if err := <-ch; err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+// HTTPPipeResponse pipe a http.Response to a http.ResponseWriter, and close http.Response
+func HTTPPipeResponse(rw http.ResponseWriter, resp *http.Response) error {
+	defer resp.Body.Close()
+	for k, v := range resp.Header {
+		rw.Header()[k] = v
+	}
+	rw.WriteHeader(resp.StatusCode)
+	_, err := io.Copy(rw, resp.Body)
+	return err
 }
