@@ -97,3 +97,15 @@ func CompactSliceStr(sl []string) []string {
 	}
 	return ret
 }
+
+// CompactSliceStrSpace filters out empty string, leading / trailing empty space from a slice of string
+func CompactSliceStrSpace(sl []string) []string {
+	ret := make([]string, 0, len(sl))
+	for _, v := range sl {
+		val := strings.TrimSpace(v)
+		if len(val) != 0 {
+			ret = append(ret, val)
+		}
+	}
+	return ret
+}

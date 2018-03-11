@@ -19,6 +19,7 @@ import (
 
 	"bytes"
 	"crypto/rand"
+
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -124,6 +125,40 @@ func Test_ToSnakeCase(t *testing.T) {
 	Convey("Convert string into snake case", t, func() {
 		for old, new := range cases {
 			So(ToSnakeCase(old), ShouldEqual, new)
+		}
+	})
+}
+
+func Test_MatchAsterisk(t *testing.T) {
+	cases := []struct {
+		P string
+		S string
+		R bool
+	}{
+		{P: "AC", S: "AC", R: true},
+		{P: "", S: "AC", R: false},
+		{P: "C", S: "AC", R: false},
+		{P: "C", S: "", R: false},
+		{P: "*", S: "a", R: true},
+		{P: "*", S: "*", R: true},
+		{P: "*", S: "", R: true},
+		{P: "*AC", S: "", R: false},
+		{P: "*AC", S: "AAAAC", R: true},
+		{P: "A*AC", S: "AAAAC", R: true},
+		{P: "AA*AC", S: "AAAAC", R: true},
+		{P: "AA*A*", S: "AAAAC", R: true},
+		{P: "AA*A*", S: "AAA", R: true},
+		{P: "AA*A*C", S: "AAA", R: false},
+		{P: "A*C", S: "AAA", R: false},
+		{P: "*A*C", S: "AAAC", R: true},
+		{P: "*A**C", S: "AAAC", R: true},
+		{P: "*A**C", S: "AC", R: true},
+		{P: "*日**C", S: "锄禾日当午BBC", R: true},
+		{P: "*日**C", S: "锄禾当午BBC", R: false},
+	}
+	Convey("Match Asterisk", t, func() {
+		for _, c := range cases {
+			So(MatchAsterisk(c.P, c.S), ShouldEqual, c.R)
 		}
 	})
 }

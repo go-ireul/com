@@ -111,3 +111,27 @@ func TestCompactSliceStr(t *testing.T) {
 
 	})
 }
+
+func TestCompactSliceStrSpace(t *testing.T) {
+	var a []string
+	var b []string
+
+	a = []string{"", "", ""}
+	b = []string{}
+	if !CompareSliceStr(CompactSliceStrSpace(a), b) {
+		t.Errorf("failed 1")
+	}
+
+	a = []string{"", "b", ""}
+	b = []string{"b"}
+	if !CompareSliceStr(CompactSliceStrSpace(a), b) {
+		t.Errorf("failed 2")
+	}
+
+	a = []string{"  ", "\n", " b\n", "\t"}
+	b = []string{"b"}
+	if !CompareSliceStr(CompactSliceStrSpace(a), b) {
+		t.Errorf("failed 3")
+	}
+
+}
